@@ -25,6 +25,21 @@ def load_data(filename):
             )
     return products
 
+def remove_product(products, id):
+    temp_product = None
+
+    for product in products:
+        if product['id'] == id:
+            temp_product = product
+            break
+
+        if temp_product:
+            products.remove(temp_product)
+            return f"{temp_product['name']} togs bort"
+        else:
+            return f"Kunde inte hitta produkt"
+
+
 def view_product(products, product_id):
     for product in products:
         if product['id'] == product_id:
@@ -36,7 +51,7 @@ def add_product(products, product):
     products.append(product)
 
 
-def delete_product(products, product_id):
+def remove_product(products, product_id):
     for product in products:
         if product['id'] == product_id:
             products.remove(product)
@@ -50,8 +65,8 @@ def delete_product(products, product_id):
 
 def get_products(products):
     product_list = []
-    for product in products:
-        product_info = f"{product['name']} \t {product['desc']} \t {locale.currency(product['price'], grouping=True)}"
+    for index,  product in enumerate(products,1):
+        product_info = f"{index}. {product['name']} \t {product['desc']} \t {locale.currency(product['price'], grouping=True)}"
         product_list.append(product_info)
     
     return "\n".join(product_list)
@@ -66,7 +81,27 @@ while True:
         os.system("cls")
         print(get_products(products))
         id = int(input("Vilken"))
-        print(delete_product(products, id))
+        print(remove_product(products, id))
+
+        choice = ("vill du (T)a bort eller (V)isa produkt").strip().upper()
+
+       
+        if choice == "T":
+                id = int(input("Vilken produkt vill du ta bort? "))
+
+            
+        if choice in ["T", "V"]:
+            if id >= 1 and id <= len(products):
+                selected_product = products[id -1]
+
+                id = selected_product['id']
+
+                remove_product(products, id)
+
+                print(remove_product(products, id))
+
+
+
 
     except:
         print("You need to type in numbers")
